@@ -25,8 +25,7 @@ let headerView = CarouselView(frame: CGRect(x: 0, y: 20, width: view.frame.width
 /// 设置图片内容模式
 headerView.imgContentMode = .scaleAspectFill
 /// 设置图片数组
-headerView.style = .image(["https://www.google.cn/chrome/assets/common/images/marquee/chrome-new.jpg",
-                           "ydms1",
+headerView.style = .image(["ydms1",
                            "ydms2",
                            "https://www.google.cn/chrome/assets/common/images/marquee/benefits-4.jpg",
                            "https://www.google.cn/chrome/assets/common/images/marquee/benefits-5-mobile.png",
