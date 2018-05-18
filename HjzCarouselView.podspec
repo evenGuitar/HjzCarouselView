@@ -8,7 +8,6 @@ Pod::Spec.new do |s|
   s.platform      = :ios, "9.0"	# 支持的软件平台
   # 仓库源
   s.source        = { :git => "https://github.com/HjzCy/HjzCarouselView.git", :tag => "v#{s.version}" }
-  s.swift_version = "4.0"
   # 源文件所在路径，跟 .podspec 平级.
   s.source_files  = "HjzCarouselView/**/*"
   s.dependency "Kingfisher"
