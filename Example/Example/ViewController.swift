@@ -47,7 +47,7 @@ class ViewController: UIViewController {
         
         /// 头条模式
         let headline = CarouselView(frame: CGRect(x: 0, y: headerView.frame.maxY + 40, width: view.frame.width, height: 44))
-        
+
         /// 头条标题初始 x，默认 0
         headline.lineOffsetX = 5
         /// 限制头条的显示行数，0表示不限制，默认1

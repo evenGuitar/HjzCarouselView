@@ -80,24 +80,26 @@ public final class CarouselView: UIView {
     public var style = Style.image([]) {
         didSet {
             
+            removeTimer()
+            
             switch style {
             case .label(var items):
                 pageCtrl = nil
                 if items.count > 1 {
                     items.insert(items.last!, at: 0)
-                    items.append(items.first!)
+                    items.append(items[1])
                     addTimer()
                 }
+                self.style = .label(items)
             case .image(var items):
                 pageCtrl?.numberOfPages = items.count
                 if items.count > 1 {
                     items.insert(items.last!, at: 0)
-                    items.append(items.first!)
+                    items.append(items[1])
                     addTimer()
                 }
+                self.style = .image(items)
             }
-            
-            removeTimer()
             
             layout.scrollDirection = isImgStyle ? .horizontal : .vertical
             collectionView.backgroundView = isImgStyle ? UIImageView(image: placeholder) : nil
@@ -110,7 +112,7 @@ public final class CarouselView: UIView {
     @objc var placeholder: UIImage?
     /// 点击 cell 的回调
     public var tapClosure:((Int) -> Void)?
-
+    
     
     convenience init(frame: CGRect, placeholder: UIImage? = nil) {
         self.init(frame: frame)
@@ -141,13 +143,15 @@ public final class CarouselView: UIView {
         layout.itemSize = bounds.size
         pageCtrl?.frame = CGRect(x: 0, y: bounds.height - 37, width: bounds.width, height: 37)
         
-        // 刚开始需要偏移一位
-        if items.count > 1 {
+        if items.count > 1 {    // 刚开始需要偏移一位
             if isImgStyle {
                 collectionView.contentOffset.x = bounds.width
             }else {
                 collectionView.contentOffset.y = bounds.height
             }
+        }else { // 不需要偏移
+            collectionView.contentOffset.x = 0
+            collectionView.contentOffset.x = 0
         }
     }
     
