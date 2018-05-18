@@ -3,7 +3,7 @@
 
 支持代码、xib、Storyboard。
 
-无线循环，可滑动。自动销毁内存，无需手动释放。
+无线循环，可滑动。自动销毁内存。
 
 ![](https://github.com/HjzCy/HjzCarouselView/blob/master/Screenshots/mov.gif)
 
