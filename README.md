@@ -3,7 +3,7 @@
 
 支持代码、xib、Storyboard。
 
-![](https://github.com/HjzCy/HjzCarouselView/blob/master/Screenshots/%E6%88%AA%E5%9B%BE.png)
+![](https://github.com/HjzCy/HjzCarouselView/blob/master/Screenshots/mov.gif)
 
 ## 安装
 
