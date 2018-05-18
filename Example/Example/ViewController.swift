@@ -31,13 +31,12 @@ class ViewController: UIViewController {
         /// 使用的是 Kingfisher 框架加载网络图片。
         /// 图片是要通过 https 认证的，
         /// 如果不是，请自行添加图片的域名到 info.plist 白名单中。
-        let headerView = CarouselView(frame: CGRect(x: 0, y: 20, width: view.frame.width, height: 230))
+        let headerView = CarouselView(frame: CGRect(x: 0, y: 44, width: view.frame.width, height: 230))
 
         /// 设置图片内容模式
         headerView.imgContentMode = .scaleAspectFill
         /// 设置图片数组
-        headerView.style = .image(["https://www.google.cn/chrome/assets/common/images/marquee/chrome-new.jpg",
-                                   "ydms1",
+        headerView.style = .image(["ydms1",
                                    "ydms2",
                                    "https://www.google.cn/chrome/assets/common/images/marquee/benefits-4.jpg",
                                    "https://www.google.cn/chrome/assets/common/images/marquee/benefits-5-mobile.png",
