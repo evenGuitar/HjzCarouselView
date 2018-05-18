@@ -1,0 +1,23 @@
+PODS:
+  - HjzCarouselView (0.0.1):
+    - Kingfisher
+  - Kingfisher (4.8.0)
+
+DEPENDENCIES:
+  - HjzCarouselView (from `../`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Kingfisher
+
+EXTERNAL SOURCES:
+  HjzCarouselView:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  HjzCarouselView: 9b1a1b8dab5d6438fc628d610ee9f56bfd66cbe5
+  Kingfisher: 976d828df2b24834c6a3f2fc4d82cdbd26552be1
+
+PODFILE CHECKSUM: a79508e88571c07e5724ece979c0a9b823314bbb
+
+COCOAPODS: 1.5.2

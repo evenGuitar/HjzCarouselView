@@ -1,0 +1,6 @@
+framework module HjzCarouselView {
+  umbrella header "HjzCarouselView-umbrella.h"
+
+  export *
+  module * { export * }
+}

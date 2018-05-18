@@ -9,10 +9,10 @@
 import UIKit
 import Kingfisher
 
-final class CarouselView: UIView {
+public final class CarouselView: UIView {
     
-    enum Style: Equatable {
-        case image(Bool)    // 是否网络图片
+    public enum Style: Equatable {
+        case image
         case label
     }
     
@@ -23,6 +23,15 @@ final class CarouselView: UIView {
     var isEmpty: Bool {
         return items.isEmpty
     }
+    
+    /// 头条标题初始 x
+    public var lineOffsetX: CGFloat = 0
+    /// 限制头条的显示行数，0 表示不限制
+    public var numberOfLines = 1
+    /// 头条字体大小
+    public var fontSize: CGFloat = 12
+    /// 图片的内容模式
+    public var imgContentMode: UIViewContentMode = .scaleAspectFill
     
     /// 集合视图
     private lazy var collectionView: UICollectionView = {
@@ -57,7 +66,7 @@ final class CarouselView: UIView {
         return collectionView.collectionViewLayout as! UICollectionViewFlowLayout
     }
     /// 样式
-    private var style = Style.image(true) {
+    private var style = Style.image {
         didSet {
             if style == .label {
                 pageCtrl = nil
@@ -74,24 +83,28 @@ final class CarouselView: UIView {
     public var tapClosure:((Int) -> Void)?
 
     
-    init(frame: CGRect, placeholder: UIImage) {
-        super.init(frame: frame)
+    convenience init(frame: CGRect, placeholder: UIImage? = nil) {
+        self.init(frame: frame)
         self.placeholder = placeholder
+    }
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
         addSubview(collectionView)
         addSubview(pageCtrl!)
     }
     
-    override func awakeFromNib() {
+    override public func awakeFromNib() {
         super.awakeFromNib()
         addSubview(collectionView)
         addSubview(pageCtrl!)
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    override func layoutSubviews() {
+    override public func layoutSubviews() {
         super.layoutSubviews()
 
         // 重置 frame
@@ -109,7 +122,7 @@ final class CarouselView: UIView {
         }
     }
     
-    override func willMove(toWindow newWindow: UIWindow?) {
+    override public func willMove(toWindow newWindow: UIWindow?) {
         super.willMove(toWindow: newWindow)
         if newWindow != nil {
             addTimer()  // 移动到当前界面
@@ -145,25 +158,24 @@ final class CarouselView: UIView {
 // MARK: UICollectionViewDataSource
 extension CarouselView: UICollectionViewDataSource {
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return items.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CarouselCell
         
         let item = items[indexPath.item]
-
-        switch style {
-        case .image(let isNetwork):
-            if !isNetwork {
-                cell.imageView.image = UIImage(named: item)
-            }else {
-                cell.imageView.kf.setImage(with: URL(string: item), placeholder: placeholder)
-            }
-        default:
+        
+        if style == .label {
             cell.label.text = items[indexPath.item]
+        }else {
+            if let url = URL(string: item) {
+                cell.imageView.kf.setImage(with: url, placeholder: placeholder)
+            }else {
+                cell.imageView.image = UIImage(named: item)
+            }
         }
 
         return cell
@@ -174,11 +186,11 @@ extension CarouselView: UICollectionViewDataSource {
 // MARK: UICollectionViewDelegate
 extension CarouselView: UICollectionViewDelegate {
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         tapClosure?(indexPath.item - 1)
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         // 四舍五入：Int（小数 + 0.5）
         let index = scrollView.contentOffset.x / scrollView.frame.width
@@ -203,12 +215,12 @@ extension CarouselView: UICollectionViewDelegate {
     }
     
     /// 开始拖拽
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         removeTimer()
     }
     
     /// 停止拖拽
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+    public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         addTimer()
     }
 }

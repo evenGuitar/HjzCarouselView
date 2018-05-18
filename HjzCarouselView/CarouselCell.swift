@@ -10,25 +10,29 @@ import UIKit
 
 final class CarouselCell: UICollectionViewCell {
     
-    lazy var imageView = UIImageView(frame: bounds)
+    let imageView = UIImageView(frame: .zero)
+    let label = UILabel(frame: .zero)
     
-    lazy var label: UILabel = {
-        let label = UILabel(frame: bounds)
-        label.textColor = .black
-        label.font = .systemFont(ofSize: 12)
-        return label
-    }()
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        imageView.frame = bounds
         contentView.addSubview(imageView)
+        
+        label.textColor = .black
         contentView.addSubview(label)
         
         DispatchQueue.main.asyncAfter(deadline: .now()) {
-            let superview = self.superview as! CarouselView
-            self.imageView.isHidden = !superview.isImgStyle
+            
+            let superview = self.superview?.superview as! CarouselView
+            
+            self.label.frame = CGRect(x: superview.lineOffsetX, y: 0, width: self.bounds.width - superview.lineOffsetX, height: self.bounds.height)
+            self.label.numberOfLines = superview.numberOfLines
             self.label.isHidden = superview.isImgStyle
+            self.label.font = .systemFont(ofSize: superview.fontSize)
+            
+            self.imageView.contentMode = superview.imgContentMode
+            self.imageView.isHidden = !superview.isImgStyle
         }
     }
     
@@ -36,3 +40,16 @@ final class CarouselCell: UICollectionViewCell {
         super.init(coder: aDecoder)
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
