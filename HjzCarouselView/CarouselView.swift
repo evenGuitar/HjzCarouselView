@@ -12,18 +12,27 @@ import Kingfisher
 public final class CarouselView: UIView {
     
     public enum Style: Equatable {
-        case image
-        case label
+        case image([String])
+        case label([String])
     }
-    
+    /// 是否图片样式
     var isImgStyle: Bool {
-        return style != .label
+        switch style {
+        case .image:
+            return true
+        case .label:
+            return false
+        }
     }
-    
-    var isEmpty: Bool {
-        return items.isEmpty
+    /// 数据
+    private var items: [String] {
+        switch style {
+        case .image(let items):
+            return items
+        case .label(let items):
+            return items
+        }
     }
-    
     /// 头条标题初始 x
     public var lineOffsetX: CGFloat = 0
     /// 限制头条的显示行数，0 表示不限制
@@ -32,7 +41,10 @@ public final class CarouselView: UIView {
     public var fontSize: CGFloat = 12
     /// 图片的内容模式
     public var imgContentMode: UIViewContentMode = .scaleAspectFill
-    
+    /// 是否有数据
+    public var isEmpty: Bool {
+        return items.isEmpty
+    }
     /// 集合视图
     private lazy var collectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
@@ -55,7 +67,6 @@ public final class CarouselView: UIView {
         let pageControl = UIPageControl(frame: CGRect(x: 0, y: bounds.height - 37, width: bounds.width, height: 37))
         pageControl.currentPageIndicatorTintColor = .orange
         pageControl.pageIndicatorTintColor = .lightText
-        // 如果只有一页, 则隐藏该指示器。默认为 false
         pageControl.hidesForSinglePage = true
         pageControl.currentPage = 0
         pageControl.isUserInteractionEnabled = false
@@ -66,15 +77,33 @@ public final class CarouselView: UIView {
         return collectionView.collectionViewLayout as! UICollectionViewFlowLayout
     }
     /// 样式
-    private var style = Style.image {
+    public var style = Style.image([]) {
         didSet {
-            if style == .label {
+            
+            switch style {
+            case .label(var items):
                 pageCtrl = nil
+                if items.count > 1 {
+                    items.insert(items.last!, at: 0)
+                    items.append(items.first!)
+                    addTimer()
+                }
+            case .image(var items):
+                pageCtrl?.numberOfPages = items.count
+                if items.count > 1 {
+                    items.insert(items.last!, at: 0)
+                    items.append(items.first!)
+                    addTimer()
+                }
             }
+            
+            removeTimer()
+            
+            layout.scrollDirection = isImgStyle ? .horizontal : .vertical
+            collectionView.backgroundView = isImgStyle ? UIImageView(image: placeholder) : nil
+            collectionView.reloadData()
         }
     }
-    /// 数据
-    private lazy var items = [String]()
     /// 定时器
     private weak var timer: Timer?
     /// 占位图
@@ -130,28 +159,6 @@ public final class CarouselView: UIView {
             removeTimer()   // 移除当前界面
         }
     }
-    
-    /// 设置数据
-    public func set(items: [String], in style: Style) {
-        
-        self.items = items
-        self.style = style
-        
-        // 先销毁定时器
-        removeTimer()
-        
-        // 有两张以上的图片才启动定时器
-        if items.count > 1 {
-            self.items.insert(items.last!, at: 0)
-            self.items.append(items.first!)
-            addTimer()
-        }
-        
-        pageCtrl?.numberOfPages = items.count
-        layout.scrollDirection = isImgStyle ? .horizontal : .vertical
-        collectionView.backgroundView = isImgStyle ? UIImageView(image: placeholder) : nil
-        collectionView.reloadData()
-    }
 }
 
 
@@ -168,14 +175,14 @@ extension CarouselView: UICollectionViewDataSource {
         
         let item = items[indexPath.item]
         
-        if style == .label {
-            cell.label.text = items[indexPath.item]
-        }else {
-            if let url = URL(string: item) {
-                cell.imageView.kf.setImage(with: url, placeholder: placeholder)
+        if isImgStyle {
+            if let image = UIImage(named: item) {
+                cell.imageView.image = image
             }else {
-                cell.imageView.image = UIImage(named: item)
+                cell.imageView.kf.setImage(with: URL(string: item), placeholder: placeholder)
             }
+        }else {
+            cell.label.text = items[indexPath.item]
         }
 
         return cell
