@@ -10,5 +10,6 @@ Pod::Spec.new do |s|
   s.source        = { :git => "https://github.com/HjzCy/HjzCarouselView.git", :tag => "v#{s.version}" }
   # 源文件所在路径，跟 .podspec 平级.
   s.source_files  = "HjzCarouselView/**/*"
+  s.frameworks  = "Foundation", "UIKit"
   s.dependency "Kingfisher"
 end
